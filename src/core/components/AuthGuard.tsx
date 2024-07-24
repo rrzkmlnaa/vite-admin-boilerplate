@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react'
+import useAuthStore from 'core/store/useAuthStore'
 import { Navigate } from 'react-router-dom'
-import useAuthStore from 'store/useAuthStore'
 
 // Asumsikan Anda memiliki fungsi untuk memeriksa status autentikasi
 

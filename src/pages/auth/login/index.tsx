@@ -1,22 +1,25 @@
 import React, { useEffect, useState } from 'react'
+import useAuthStore from 'core/store/useAuthStore'
 import { useNavigate } from 'react-router-dom'
-import useAuthStore from 'store/useAuthStore'
+import { auth } from 'core/config/authContext'
 
 const LoginPage = () => {
   const navigate = useNavigate()
 
   const { login, isAuthenticated } = useAuthStore()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [email, setEmail] = useState('rizky@hracademy.id')
+  const [password, setPassword] = useState('Smartworks123#')
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     // Example authentication logic
-    if (email === 'test@example.com' && password === 'password') {
-      const user = { email }
-      login('wkwkwkwk', user)
-    } else {
-      alert('Invalid credentials')
+    try {
+      const user = { email, password }
+      const authData = await auth({ type: 'login', body: user })
+
+      login(authData.result.accessToken, authData.result.user)
+    } catch (error) {
+      alert(error)
     }
   }
 

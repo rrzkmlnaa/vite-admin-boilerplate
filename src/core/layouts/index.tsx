@@ -1,19 +1,36 @@
-import React, { useState } from 'react'
-import { Outlet } from 'react-router-dom'
+import React, { useContext, useState } from 'react'
+import { Navigate, Outlet, useLocation } from 'react-router-dom'
 import TopNavigation from './partials/TopNavigation'
 import Sidebar from './partials/Sidebar'
-import { useLS } from 'utils'
+import { classNames, useLS } from 'utils'
+import { AbilityContext } from 'core/contexts/AbilityContext'
+import { aclMap } from 'routes/navigation'
 
 const AppLayout = () => {
+  const location = useLocation()
+  const ability = useContext(AbilityContext)
   const setStoredData = useLS('put', 'settings')
   const storedData = useLS('get', 'settings')
   const [isSidebarOpen, setSidebarOpen] = useState(
     storedData?.sidebarOpen ?? false
   )
 
+  const getCurrentPageACL = (pathname: string) => {
+    return aclMap[pathname]
+  }
+
   const toggleSidebar = () => {
     setSidebarOpen(!isSidebarOpen)
     setStoredData({ sidebarOpen: !isSidebarOpen })
+  }
+
+  const currentPageACL = getCurrentPageACL(location.pathname)
+
+  if (
+    currentPageACL &&
+    !ability?.can(currentPageACL.action, currentPageACL.subject)
+  ) {
+    return <Navigate to="/not-authorized" />
   }
 
   return (
@@ -24,9 +41,10 @@ const AppLayout = () => {
       />
       <Sidebar showSidebar={isSidebarOpen} />
       <main
-        className={`p-6 transition-all duration-300 ${
-          !isSidebarOpen ? 'ml-64' : 'ml-0'
-        }`}
+        className={classNames(
+          'p-6 transition-all duration-300',
+          isSidebarOpen ? 'ml-0' : 'ml-64'
+        )}
       >
         <Outlet />
       </main>

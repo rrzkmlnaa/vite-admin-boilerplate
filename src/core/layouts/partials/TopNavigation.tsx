@@ -1,6 +1,8 @@
-import React from 'react'
-import useAuthStore from 'store/useAuthStore'
+import React, { useEffect, useState } from 'react'
+import useAuthStore from 'core/store/useAuthStore'
 import { classNames } from 'utils'
+import { useTheme } from 'ThemeProvider'
+import { Icon } from '@iconify/react'
 
 interface NavigationProps {
   showSidebar: boolean
@@ -11,14 +13,31 @@ const TopNavigation: React.FC<NavigationProps> = ({
   showSidebar,
   toggleSidebar
 }) => {
+  const { theme, toggleTheme } = useTheme()
   const { logout } = useAuthStore()
+  const [isScrolled, setIsScrolled] = useState(false)
+
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 0)
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   return (
-    <header>
+    <header
+      className={classNames(
+        'px-6 pt-4',
+        theme === 'light' ? 'bg-[#f8f7fa]' : ''
+      )}
+    >
       <nav
         className={classNames(
-          'navbar bg-base-300 transition-transform duration-300 p-4',
-          !showSidebar ? 'ml-auto w-[calc(100%-16rem)]' : ''
+          'navbar transition-transform duration-300 px-4 py-2 rounded-lg',
+          !showSidebar ? 'ml-auto w-[calc(100%-16rem)]' : '',
+          isScrolled
+            ? 'fixed z-50 right-0 top-0 backdrop-blur bg-opacity-80'
+            : '',
+          theme === 'light' ? 'bg-white shadow-md' : 'bg-base-300' // Apply background color based on theme
         )}
         aria-label="Main Navigation"
       >
@@ -29,28 +48,30 @@ const TopNavigation: React.FC<NavigationProps> = ({
             className="btn btn-circle btn-ghost"
             onClick={toggleSidebar}
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="size-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M4 6h16M4 12h16M4 18h7"
-              />
-            </svg>
+            <Icon icon="tabler:menu-4" className="size-6" />
           </button>
         </div>
-        {/* <div className="navbar-center">
-            <a className="btn btn-ghost text-xl" href="#home">
-              daisyUI
-            </a>
-          </div> */}
-        <div className="navbar-end">
+
+        <div className="navbar-end gap-3">
+          <button
+            onClick={toggleTheme}
+            className="btn btn-circle btn-ghost swap swap-rotate"
+            aria-label="Toggle theme"
+          >
+            <Icon
+              icon="tabler:sun"
+              className={`size-6 fill-current ${
+                theme === 'light' ? 'block' : 'hidden'
+              }`}
+            />
+            <Icon
+              icon="tabler:moon"
+              className={`size-6 fill-current ${
+                theme === 'dark' ? 'block' : 'hidden'
+              }`}
+            />
+          </button>
+
           <div className="dropdown dropdown-end dropdown-hover">
             <div
               tabIndex={0}
@@ -59,15 +80,26 @@ const TopNavigation: React.FC<NavigationProps> = ({
             >
               <div className="avatar online">
                 <div className="w-10 rounded-full">
-                  <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+                  <img
+                    src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
+                    alt="Profile"
+                  />
                 </div>
               </div>
             </div>
             <div
               tabIndex={0}
-              className="card dropdown-content card-compact z-[1] w-52 bg-primary p-2 text-primary-content shadow"
+              className={classNames(
+                'card dropdown-content card-compact z-[1] w-52 p-2 text-primary-content shadow',
+                theme === 'dark' ? 'bg-base-content' : 'bg-white'
+              )}
             >
-              <ul tabIndex={0} className="menu text-white">
+              <ul
+                className={classNames(
+                  'menu',
+                  theme === 'light' ? 'text-base-content' : 'text-white'
+                )}
+              >
                 <li>
                   <a className="font-bold">Profile</a>
                 </li>

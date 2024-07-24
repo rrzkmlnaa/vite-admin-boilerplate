@@ -1,0 +1,7 @@
+dist
+.vscode
+.vites
+node_modules
+.editorconfig
+LICENSE
+README.,d

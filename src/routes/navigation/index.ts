@@ -9,9 +9,7 @@ export interface NavigationProps {
 export const navigationItems: NavigationProps[] = [
   {
     title: 'Dashboard',
-    path: '/',
-    action: 'read',
-    subject: 'dashboard'
+    path: '/'
   }
 ]
 

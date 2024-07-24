@@ -10,8 +10,7 @@ import defineAbilitiesFor from 'core/contexts/AbilityBuilder'
 const container = document.getElementById('root') as HTMLDivElement
 const root = createRoot(container)
 
-const user = {}
-const ability = defineAbilitiesFor(user)
+const ability = defineAbilitiesFor()
 
 root.render(
   <React.StrictMode>

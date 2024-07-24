@@ -1,15 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { AbilityBuilder, Ability } from '@casl/ability'
+import { getUserPermissions } from 'core/utils/getUserPermission'
 
-const defineAbilitiesFor = (user: any) => {
-  const { can, cannot, rules } = new AbilityBuilder(Ability)
+const defineAbilitiesFor = () => {
+  const { can, rules } = new AbilityBuilder(Ability)
+  const userPermissions: [] = JSON.parse(getUserPermissions())
 
-  if (user.role === 'admin') {
-    can('manage', 'all')
-  } else {
-    can('read', 'dashboard')
-    cannot('delete', 'all')
-  }
+  userPermissions?.map((acl: any) => {
+    can(acl.action, acl.subject)
+  })
 
   return new Ability(rules)
 }

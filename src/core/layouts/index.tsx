@@ -73,7 +73,7 @@ const AppLayout: React.FC = () => {
         showSidebar={isSidebarOpen}
         toggleSidebar={toggleSidebar}
       />
-      <Sidebar showSidebar={isSidebarOpen} />
+      <Sidebar showSidebar={isSidebarOpen} toggleSidebar={toggleSidebar} />
       <main
         className={classNames(
           'p-6 transition-all duration-300',

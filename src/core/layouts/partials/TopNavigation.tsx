@@ -37,19 +37,21 @@ const TopNavigation: React.FC<NavigationProps> = ({
           isScrolled
             ? 'fixed z-50 right-0 top-0 backdrop-blur bg-opacity-80'
             : '',
-          theme === 'light' ? 'bg-white shadow-md' : 'bg-base-300' // Apply background color based on theme
+          theme === 'light' ? 'bg-white shadow-md' : 'bg-base-200' // Apply background color based on theme
         )}
         aria-label="Main Navigation"
       >
         <div className="navbar-start">
-          <button
-            tabIndex={0}
-            aria-label="Menu"
-            className="btn btn-circle btn-ghost"
-            onClick={toggleSidebar}
-          >
-            <Icon icon="tabler:menu-4" className="size-6" />
-          </button>
+          {showSidebar && (
+            <button
+              tabIndex={0}
+              aria-label="Menu"
+              className="btn btn-circle btn-ghost"
+              onClick={toggleSidebar}
+            >
+              <Icon icon="tabler:menu-4" className="size-6" />
+            </button>
+          )}
         </div>
 
         <div className="navbar-end gap-3">
